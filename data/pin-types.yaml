@@ -1,0 +1,21 @@
+pinTypes:
+  - id: has-album
+    name: Photo Album
+    color: "#8B6E4E"
+    icon: camera
+    description: Places with a photo album
+  - id: visited
+    name: Visited
+    color: "#9B9590"
+    icon: dot
+    description: Places visited without a dedicated album
+  - id: work-trip
+    name: Work Trip
+    color: "#5B7A8A"
+    icon: briefcase
+    description: Work-related travel
+  - id: roller-derby
+    name: Roller Derby
+    color: "#A85B5B"
+    icon: star
+    description: Roller derby events and tournaments

@@ -1,0 +1,182 @@
+---
+import { getCollection } from "astro:content";
+
+const albums = await getCollection("albums", ({ data }) => !data.draft);
+
+// Group albums by year
+const albumsByYear = albums.reduce(
+  (acc, album) => {
+    const year = new Date(album.data.date).getFullYear();
+    if (!acc[year]) acc[year] = [];
+    acc[year].push(album);
+    return acc;
+  },
+  {} as Record<number, typeof albums>
+);
+
+const years = Object.keys(albumsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+
+// Collect unique tags and regions
+const allTags = [...new Set(albums.flatMap((a) => a.data.tags))].sort();
+const allRegions = [
+  ...new Set(albums.map((a) => a.data.region).filter(Boolean)),
+].sort();
+---
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-inner">
+    <section class="sidebar-section">
+      <h3 class="sidebar-heading">Years</h3>
+      <ul class="sidebar-list">
+        {years.map((year) => (
+          <li>
+            <a
+              href={`#year-${year}`}
+              class="sidebar-link year-link"
+              data-year={year}
+            >
+              {year}
+              <span class="sidebar-count">{albumsByYear[year].length}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {allRegions.length > 0 && (
+      <section class="sidebar-section">
+        <h3 class="sidebar-heading">Regions</h3>
+        <ul class="sidebar-list">
+          {allRegions.map((region) => (
+            <li>
+              <button
+                class="sidebar-link filter-btn"
+                data-filter="region"
+                data-value={region}
+              >
+                {region?.replace("-", " ")}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {allTags.length > 0 && (
+      <section class="sidebar-section">
+        <h3 class="sidebar-heading">Tags</h3>
+        <ul class="sidebar-list sidebar-tags">
+          {allTags.map((tag) => (
+            <li>
+              <button
+                class="sidebar-link filter-btn"
+                data-filter="tag"
+                data-value={tag}
+              >
+                {tag}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </div>
+</aside>
+
+<style>
+  .sidebar {
+    position: sticky;
+    top: 4rem;
+    width: var(--sidebar-width);
+    height: calc(100vh - 4rem);
+    overflow-y: auto;
+    flex-shrink: 0;
+    padding: 2rem 0;
+    scrollbar-width: thin;
+  }
+
+  .sidebar-inner {
+    padding-right: 2rem;
+  }
+
+  .sidebar-section {
+    margin-bottom: 2rem;
+  }
+
+  .sidebar-heading {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-faint);
+    margin-bottom: 0.75rem;
+  }
+
+  .sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .sidebar-tags {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .sidebar-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-serif);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    transition: color 0.15s ease, background-color 0.15s ease;
+    text-transform: capitalize;
+  }
+
+  .sidebar-tags .sidebar-link {
+    width: auto;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    background: var(--color-bg-surface);
+    padding: 0.2rem 0.5rem;
+  }
+
+  .sidebar-link:hover {
+    color: var(--color-text);
+    background-color: var(--color-bg-surface);
+  }
+
+  .sidebar-link.active {
+    color: var(--color-text);
+    background-color: var(--color-bg-surface);
+    font-weight: 500;
+  }
+
+  .sidebar-count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-faint);
+  }
+
+  @media (max-width: 1024px) {
+    .sidebar {
+      display: none;
+    }
+  }
+</style>

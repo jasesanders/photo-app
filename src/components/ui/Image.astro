@@ -1,0 +1,68 @@
+---
+import { imageUrl, imageSrcset, imageSizes, type ImageFormat } from "../../lib/images";
+
+interface Props {
+  albumSlug: string;
+  id: string;
+  alt?: string;
+  caption?: string;
+  layout?: "full" | "half" | "third";
+  loading?: "lazy" | "eager";
+  class?: string;
+}
+
+const {
+  albumSlug,
+  id,
+  alt = "",
+  caption,
+  layout = "full",
+  loading = "lazy",
+  class: className,
+} = Astro.props;
+
+const sizes = imageSizes(layout);
+---
+
+<figure class:list={["image-figure", className]}>
+  <picture>
+    <source
+      type="image/avif"
+      srcset={imageSrcset(albumSlug, id, "avif")}
+      sizes={sizes}
+    />
+    <source
+      type="image/webp"
+      srcset={imageSrcset(albumSlug, id, "webp")}
+      sizes={sizes}
+    />
+    <img
+      src={imageUrl(albumSlug, id, 1200, "jpeg")}
+      srcset={imageSrcset(albumSlug, id, "jpeg")}
+      sizes={sizes}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+    />
+  </picture>
+  {caption && <figcaption class="image-caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .image-figure {
+    margin: 0;
+  }
+
+  .image-figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .image-caption {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+</style>

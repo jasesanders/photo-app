@@ -1,0 +1,101 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Sidebar from "../components/navigation/Sidebar.astro";
+import AlbumCard from "../components/album/AlbumCard.astro";
+import YearHeader from "../components/album/YearHeader.astro";
+
+const albums = await getCollection("albums", ({ data }) => !data.draft);
+
+// Sort by date descending
+albums.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// Group by year
+const albumsByYear = albums.reduce(
+  (acc, album) => {
+    const year = new Date(album.data.date).getFullYear();
+    if (!acc[year]) acc[year] = [];
+    acc[year].push(album);
+    return acc;
+  },
+  {} as Record<number, typeof albums>
+);
+
+const years = Object.keys(albumsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+---
+
+<BaseLayout title="Jase Sanders — Photography">
+  <div class="home-layout">
+    <Sidebar />
+    <div class="album-feed">
+      {years.map((year) => (
+        <>
+          <YearHeader year={year} />
+          <div class="album-grid">
+            {albumsByYear[year].map((album) => (
+              <AlbumCard
+                slug={album.id}
+                title={album.data.title}
+                date={album.data.date}
+                cover={album.data.cover}
+                location={album.data.location?.name}
+                tags={album.data.tags}
+              />
+            ))}
+          </div>
+        </>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Scroll-tracking: highlight active year in sidebar
+  const yearHeaders = document.querySelectorAll<HTMLElement>("[data-year]");
+  const yearLinks = document.querySelectorAll<HTMLElement>(".year-link");
+
+  if (yearHeaders.length > 0 && yearLinks.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const year = (entry.target as HTMLElement).dataset.year;
+            yearLinks.forEach((link) => {
+              link.classList.toggle("active", link.dataset.year === year);
+            });
+          }
+        }
+      },
+      { rootMargin: "-20% 0px -70% 0px" }
+    );
+
+    yearHeaders.forEach((header) => observer.observe(header));
+  }
+</script>
+
+<style>
+  .home-layout {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .album-feed {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .album-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

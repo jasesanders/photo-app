@@ -1,0 +1,29 @@
+places:
+  - name: "Berlin"
+    lat: 52.5200
+    lng: 13.4050
+    type: "visited"
+    tags: ["travel"]
+    notes: "Weekend trip, pre-camera era"
+    date: 2019-06-15
+  - name: "Bangkok"
+    lat: 13.7563
+    lng: 100.5018
+    type: "visited"
+    tags: ["travel"]
+    notes: "Two weeks backpacking"
+    date: 2018-01-10
+  - name: "New York City"
+    lat: 40.7128
+    lng: -74.0060
+    type: "work-trip"
+    tags: ["work"]
+    notes: "Conference"
+    date: 2023-03-20
+  - name: "Austin"
+    lat: 30.2672
+    lng: -97.7431
+    type: "roller-derby"
+    tags: ["roller-derby"]
+    notes: "Tournament weekend"
+    date: 2024-02-15

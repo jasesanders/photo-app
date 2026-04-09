@@ -1,0 +1,42 @@
+---
+interface Props {
+  year: number;
+}
+
+const { year } = Astro.props;
+---
+
+<div class="year-header" id={`year-${year}`} data-year={year}>
+  <h2 class="year-title">{year}</h2>
+  <div class="year-line"></div>
+</div>
+
+<style>
+  .year-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    scroll-margin-top: 5rem;
+  }
+
+  .year-header:not(:first-child) {
+    margin-top: 4rem;
+  }
+
+  .year-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 300;
+    color: var(--color-text-faint);
+    white-space: nowrap;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .year-line {
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+  }
+</style>

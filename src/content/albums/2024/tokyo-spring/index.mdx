@@ -1,0 +1,39 @@
+---
+title: "Tokyo in Spring"
+date: 2024-04-15
+location:
+  lat: 35.6762
+  lng: 139.6503
+  name: "Tokyo, Japan"
+region: "asia"
+tags: ["travel", "street", "cherry-blossoms"]
+cover: "001"
+description: "Cherry blossoms and backstreet wandering in Tokyo."
+---
+
+import SingleFeature from "../../../../components/blocks/SingleFeature.astro";
+import TextBlock from "../../../../components/blocks/TextBlock.astro";
+import PhotoGrid from "../../../../components/blocks/PhotoGrid.astro";
+import PhotoPair from "../../../../components/blocks/PhotoPair.astro";
+import PullQuote from "../../../../components/blocks/PullQuote.astro";
+import PhotoEssay from "../../../../components/blocks/PhotoEssay.astro";
+
+<SingleFeature albumSlug="2024/tokyo-spring" id="001" caption="Meguro River at dawn" />
+
+<TextBlock>
+We arrived in Tokyo on the first day of full bloom. The forecast had been wrong all week, but the trees didn't care. Every park and riverside was dusted pink, and the light through the petals turned the whole city into something softer than it usually is.
+</TextBlock>
+
+<PhotoGrid albumSlug="2024/tokyo-spring" ids={["002", "003", "004"]} columns={3} />
+
+<PhotoEssay albumSlug="2024/tokyo-spring" imageId="005" imagePosition="left">
+The backstreets of Shimokitazawa felt like stepping into someone's living room — every surface a canvas, every doorway an invitation to look closer. We spent an entire afternoon here without meaning to.
+</PhotoEssay>
+
+<PhotoPair
+  albumSlug="2024/tokyo-spring"
+  left={{ id: "006", caption: "Yoyogi Park" }}
+  right={{ id: "007", caption: "Harajuku side street" }}
+/>
+
+<PullQuote>Every photograph is a certificate of presence.</PullQuote>

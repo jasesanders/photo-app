@@ -1,0 +1,62 @@
+---
+import Image from "../ui/Image.astro";
+
+interface Props {
+  albumSlug: string;
+  ids: string[];
+  columns?: 2 | 3 | 4;
+  captions?: Record<string, string>;
+}
+
+const { albumSlug, ids, columns = 3, captions = {} } = Astro.props;
+
+const layoutMap = {
+  2: "half" as const,
+  3: "third" as const,
+  4: "third" as const,
+};
+---
+
+<div class:list={["photo-grid", `cols-${columns}`]}>
+  {ids.map((id) => (
+    <Image
+      albumSlug={albumSlug}
+      id={id}
+      caption={captions[id]}
+      layout={layoutMap[columns]}
+    />
+  ))}
+</div>
+
+<style>
+  .photo-grid {
+    display: grid;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    .cols-3,
+    .cols-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .photo-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

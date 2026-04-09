@@ -1,0 +1,40 @@
+---
+import Image from "../ui/Image.astro";
+
+interface Props {
+  albumSlug: string;
+  id: string;
+  caption?: string;
+  alt?: string;
+}
+
+const { albumSlug, id, caption, alt } = Astro.props;
+---
+
+<div class="single-feature">
+  <Image
+    albumSlug={albumSlug}
+    id={id}
+    caption={caption}
+    alt={alt || caption || ""}
+    layout="full"
+    loading="eager"
+  />
+</div>
+
+<style>
+  .single-feature {
+    width: 100%;
+    margin-left: calc(-2rem);
+    margin-right: calc(-2rem);
+    width: calc(100% + 4rem);
+  }
+
+  @media (max-width: 768px) {
+    .single-feature {
+      margin-left: calc(-1rem);
+      margin-right: calc(-1rem);
+      width: calc(100% + 2rem);
+    }
+  }
+</style>

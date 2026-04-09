@@ -1,0 +1,15 @@
+regions:
+  - id: north-america
+    name: North America
+  - id: central-america
+    name: Central America
+  - id: south-america
+    name: South America
+  - id: europe
+    name: Europe
+  - id: asia
+    name: Asia
+  - id: africa
+    name: Africa
+  - id: oceania
+    name: Oceania

@@ -1,0 +1,98 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InteractiveMap from "../components/map/InteractiveMap";
+import { imageUrl } from "../lib/images";
+
+// Gather album pins
+const albums = await getCollection("albums", ({ data }) => !data.draft);
+const albumPins = albums
+  .filter((a) => a.data.location)
+  .map((a) => ({
+    id: `album-${a.id}`,
+    name: a.data.title,
+    lat: a.data.location!.lat,
+    lng: a.data.location!.lng,
+    type: a.data.pinType || "has-album",
+    albumSlug: a.id,
+    coverImage: imageUrl(a.id, a.data.cover, 400, "jpeg"),
+    date: a.data.date.toISOString(),
+    tags: a.data.tags,
+  }));
+
+// Gather non-album pins
+let placePins: any[] = [];
+try {
+  const pinsCollection = await getCollection("pins");
+  for (const entry of pinsCollection) {
+    const places = (entry.data as any).places || [];
+    placePins = places.map((p: any, i: number) => ({
+      id: `place-${i}`,
+      name: p.name,
+      lat: p.lat,
+      lng: p.lng,
+      type: p.type || "visited",
+      tags: p.tags || [],
+      notes: p.notes,
+      date: p.date?.toISOString(),
+    }));
+  }
+} catch {
+  // pins collection may be empty
+}
+
+const allPins = [...albumPins, ...placePins];
+
+const pinTypes = [
+  { id: "has-album", name: "Photo Album", color: "#8B6E4E" },
+  { id: "visited", name: "Visited", color: "#9B9590" },
+  { id: "work-trip", name: "Work Trip", color: "#5B7A8A" },
+  { id: "roller-derby", name: "Roller Derby", color: "#A85B5B" },
+];
+---
+
+<BaseLayout title="Map — Jase Sanders" fullWidth>
+  <div class="map-page">
+    <InteractiveMap client:only="react" pins={allPins} pinTypes={pinTypes} />
+  </div>
+</BaseLayout>
+
+<style>
+  .map-page {
+    height: calc(100vh - 4rem);
+    width: 100%;
+  }
+
+  /* Style MapLibre popup to match site theme */
+  :global(.maplibregl-popup-content) {
+    background: var(--color-bg) !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    padding: 0.75rem !important;
+  }
+
+  :global(.maplibregl-popup-tip) {
+    border-top-color: var(--color-bg) !important;
+  }
+
+  :global(.maplibregl-popup-close-button) {
+    color: var(--color-text-muted) !important;
+    font-size: 1.25rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+
+  :global(.maplibregl-ctrl-group) {
+    background: var(--color-bg) !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: 6px !important;
+  }
+
+  :global(.maplibregl-ctrl-group button) {
+    border-color: var(--color-border) !important;
+  }
+
+  :global(.maplibregl-ctrl-group button + button) {
+    border-top: 1px solid var(--color-border) !important;
+  }
+</style>

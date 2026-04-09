@@ -1,0 +1,17 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={["text-block prose", className]}>
+  <slot />
+</div>
+
+<style>
+  .text-block {
+    max-width: var(--content-narrow);
+  }
+</style>

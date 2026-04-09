@@ -1,0 +1,60 @@
+---
+import Image from "../ui/Image.astro";
+
+interface Props {
+  albumSlug: string;
+  ids: string[];
+  height?: string;
+}
+
+const { albumSlug, ids, height = "400px" } = Astro.props;
+---
+
+<div class="photo-strip" style={`--strip-height: ${height}`}>
+  <div class="photo-strip-inner">
+    {ids.map((id) => (
+      <div class="strip-item">
+        <Image albumSlug={albumSlug} id={id} layout="half" />
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .photo-strip {
+    width: calc(100% + 4rem);
+    margin-left: -2rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .photo-strip-inner {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0 2rem;
+  }
+
+  .strip-item {
+    flex: 0 0 auto;
+    height: var(--strip-height);
+  }
+
+  .strip-item :global(img) {
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    .photo-strip {
+      width: calc(100% + 2rem);
+      margin-left: -1rem;
+    }
+
+    .photo-strip-inner {
+      padding: 0 1rem;
+    }
+  }
+</style>

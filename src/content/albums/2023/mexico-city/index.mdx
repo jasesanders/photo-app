@@ -1,0 +1,27 @@
+---
+title: "Mexico City"
+date: 2023-11-10
+location:
+  lat: 19.4326
+  lng: -99.1332
+  name: "Mexico City, Mexico"
+region: "central-america"
+tags: ["travel", "street", "architecture", "food"]
+cover: "001"
+description: "Markets, murals, and mezcal in CDMX."
+---
+
+import SingleFeature from "../../../../components/blocks/SingleFeature.astro";
+import TextBlock from "../../../../components/blocks/TextBlock.astro";
+import PhotoGrid from "../../../../components/blocks/PhotoGrid.astro";
+import PullQuote from "../../../../components/blocks/PullQuote.astro";
+
+<SingleFeature albumSlug="2023/mexico-city" id="001" caption="Palacio de Bellas Artes" />
+
+<TextBlock>
+Mexico City hit differently than anywhere else we'd been. The scale of it — 22 million people, a valley ringed by volcanoes, layers of history visible on every block. We stayed in Roma Norte and barely scratched the surface.
+</TextBlock>
+
+<PhotoGrid albumSlug="2023/mexico-city" ids={["002", "003", "004"]} columns={3} />
+
+<PullQuote attribution="Octavio Paz">Solitude is the profoundest fact of the human condition.</PullQuote>

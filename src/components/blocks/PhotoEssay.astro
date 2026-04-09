@@ -1,0 +1,57 @@
+---
+import Image from "../ui/Image.astro";
+
+interface Props {
+  albumSlug: string;
+  imageId: string;
+  imagePosition?: "left" | "right";
+  caption?: string;
+}
+
+const { albumSlug, imageId, imagePosition = "left", caption } = Astro.props;
+---
+
+<div class:list={["photo-essay", `image-${imagePosition}`]}>
+  <div class="photo-essay-image">
+    <Image albumSlug={albumSlug} id={imageId} caption={caption} layout="half" />
+  </div>
+  <div class="photo-essay-text prose">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .photo-essay {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+    width: 100%;
+  }
+
+  .photo-essay.image-right .photo-essay-image {
+    order: 2;
+  }
+
+  .photo-essay.image-right .photo-essay-text {
+    order: 1;
+  }
+
+  .photo-essay-text {
+    padding-top: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .photo-essay {
+      grid-template-columns: 1fr;
+    }
+
+    .photo-essay.image-right .photo-essay-image {
+      order: 1;
+    }
+
+    .photo-essay.image-right .photo-essay-text {
+      order: 2;
+    }
+  }
+</style>

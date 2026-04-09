@@ -1,0 +1,109 @@
+---
+import "@fontsource-variable/newsreader";
+import "@fontsource-variable/newsreader/wght-italic.css";
+import "../styles/global.css";
+import ThemeToggle from "../components/ui/ThemeToggle.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  fullWidth?: boolean;
+}
+
+const { title, description = "Photography by Jase Sanders", fullWidth = false } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <!-- Prevent flash of wrong theme -->
+    <script is:inline>
+      (function() {
+        const theme = localStorage.getItem("theme") ||
+          (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="/" class="site-title">Jase Sanders</a>
+        <nav class="header-nav">
+          <a href="/" class="nav-link">Albums</a>
+          <a href="/map" class="nav-link">Map</a>
+          <ThemeToggle />
+        </nav>
+      </div>
+    </header>
+    <main class:list={["site-main", { "full-width": fullWidth }]}>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    transition: background-color 0.3s ease;
+  }
+
+  .header-inner {
+    max-width: calc(var(--content-max) + var(--sidebar-width) + 4rem);
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .site-title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .site-title:hover {
+    color: var(--color-accent);
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .nav-link {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--color-text);
+  }
+
+  .site-main {
+    max-width: calc(var(--content-max) + var(--sidebar-width) + 4rem);
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .site-main.full-width {
+    max-width: none;
+    padding: 0;
+  }
+</style>

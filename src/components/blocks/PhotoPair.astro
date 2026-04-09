@@ -1,0 +1,41 @@
+---
+import Image from "../ui/Image.astro";
+
+interface Props {
+  albumSlug: string;
+  left: { id: string; caption?: string };
+  right: { id: string; caption?: string };
+}
+
+const { albumSlug, left, right } = Astro.props;
+---
+
+<div class="photo-pair">
+  <Image
+    albumSlug={albumSlug}
+    id={left.id}
+    caption={left.caption}
+    layout="half"
+  />
+  <Image
+    albumSlug={albumSlug}
+    id={right.id}
+    caption={right.caption}
+    layout="half"
+  />
+</div>
+
+<style>
+  .photo-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  @media (max-width: 640px) {
+    .photo-pair {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

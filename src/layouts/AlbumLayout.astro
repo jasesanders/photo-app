@@ -1,0 +1,86 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  date?: string;
+  location?: string;
+  tags?: string[];
+}
+
+const { title, description, date, location, tags = [] } = Astro.props;
+---
+
+<BaseLayout title={`${title} — Jase Sanders`} description={description}>
+  <article class="album-page">
+    <header class="album-header">
+      <h1 class="album-title">{title}</h1>
+      <div class="album-meta">
+        {date && <time class="album-date">{date}</time>}
+        {location && <span class="album-location">{location}</span>}
+      </div>
+      {tags.length > 0 && (
+        <div class="album-tags">
+          {tags.map((tag) => (
+            <span class="album-tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+    <div class="album-content">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .album-page {
+    max-width: var(--content-max);
+  }
+
+  .album-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .album-title {
+    margin-bottom: 0.75rem;
+  }
+
+  .album-meta {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .album-location::before {
+    content: "·";
+    margin-right: 1.5rem;
+  }
+
+  .album-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .album-tag {
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+    background: var(--color-bg-surface);
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+  }
+
+  .album-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+</style>

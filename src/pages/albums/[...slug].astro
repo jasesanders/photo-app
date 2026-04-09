@@ -1,0 +1,31 @@
+---
+import { getCollection, render } from "astro:content";
+import AlbumLayout from "../../layouts/AlbumLayout.astro";
+
+export async function getStaticPaths() {
+  const albums = await getCollection("albums");
+  return albums.map((album) => ({
+    params: { slug: album.id },
+    props: { album },
+  }));
+}
+
+const { album } = Astro.props;
+const { Content } = await render(album);
+
+const formattedDate = album.data.date.toLocaleDateString("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+---
+
+<AlbumLayout
+  title={album.data.title}
+  description={album.data.description}
+  date={formattedDate}
+  location={album.data.location?.name}
+  tags={album.data.tags}
+>
+  <Content />
+</AlbumLayout>
